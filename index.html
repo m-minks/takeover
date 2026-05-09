@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TAKEOVER</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #070707, #111111, #1a0016);
+      color: white;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 300px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      border-right: 1px solid rgba(255, 0, 140, 0.2);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo {
+      width: 100%;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 25px rgba(255, 0, 140, 0.3);
+    }
+
+    .new-channel {
+      background: #ff0077;
+      border: none;
+      color: white;
+      padding: 15px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-bottom: 20px;
+    }
+
+    .new-channel:hover {
+      background: #ff3395;
+      transform: scale(1.03);
+    }
+
+    .search {
+      background: #181818;
+      border: 1px solid rgba(255, 0, 140, 0.15);
+      padding: 14px;
+      border-radius: 14px;
+      color: white;
+      margin-bottom: 25px;
+      outline: none;
+    }
+
+    .channel {
+      background: #141414;
+      padding: 16px;
+      border-radius: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .channel:hover {
+      background: #1f1f1f;
+      border-color: rgba(255, 0, 140, 0.4);
+      transform: translateX(5px);
+    }
+
+    .profile {
+      margin-top: auto;
+      background: #141414;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 0, 140, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      background: #ff0077;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    /* MAIN */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      padding: 25px;
+      border-bottom: 1px solid rgba(255, 0, 140, 0.2);
+      background: rgba(15, 15, 15, 0.7);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      color: #ff0077;
+      font-size: 32px;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .header-buttons button {
+      background: #1c1c1c;
+      border: none;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .header-buttons button:hover {
+      background: #2b2b2b;
+    }
+
+    .chat {
+      flex: 1;
+      padding: 25px;
+      overflow-y: auto;
+    }
+
+    .message {
+      background: rgba(20, 20, 20, 0.9);
+      border: 1px solid rgba(255, 0, 140, 0.2);
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 18px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .message-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    .message-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: #ff0077;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .tag {
+      background: rgba(255, 0, 140, 0.2);
+      color: #ff4fa8;
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      margin-left: 10px;
+    }
+
+    .time {
+      color: gray;
+      font-size: 13px;
+    }
+
+    .message p {
+      margin-top: 10px;
+      line-height: 1.5;
+      color: #e6e6e6;
+    }
+
+    .input-area {
+      padding: 20px;
+      background: rgba(15, 15, 15, 0.8);
+      border-top: 1px solid rgba(255, 0, 140, 0.2);
+      display: flex;
+      gap: 15px;
+    }
+
+    .input-area input {
+      flex: 1;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid transparent;
+      background: #1b1b1b;
+      color: white;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .input-area input:focus {
+      border-color: #ff0077;
+    }
+
+    .send {
+      background: #ff0077;
+      border: none;
+      color: white;
+      padding: 0 28px;
+      border-radius: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .send:hover {
+      background: #ff3395;
+      transform: scale(1.03);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media(max-width: 900px) {
+      .sidebar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" style="
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #050505, #120010);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  ">
+
+    <div style="
+      width: 420px;
+      background: rgba(15,15,15,0.95);
+      border: 1px solid rgba(255,0,140,0.2);
+      border-radius: 30px;
+      padding: 35px;
+      box-shadow: 0 0 40px rgba(255,0,140,0.15);
+      animation: fadeIn 0.5s ease;
+    ">
+
+      <img
+        src="takelogo.png"
+        style="
+          width: 100%;
+          border-radius: 20px;
+          margin-bottom: 25px;
+        "
+      />
+
+      <h1 style="
+        text-align: center;
+        margin-bottom: 10px;
+        color: #ff0077;
+      ">
+        TAKEOVER
+      </h1>
+
+      <p style="
+        text-align: center;
+        color: gray;
+        margin-bottom: 30px;
+      ">
+        Entre ou crie sua conta para acessar o projeto.
+      </p>
+
+      <input
+        type="text"
+        id="username"
+        placeholder="Usuário"
+        style="
+          width: 100%;
+          padding: 16px;
+          margin-bottom: 15px;
+          border-radius: 16px;
+          border: 1px solid rgba(255,0,140,0.2);
+          background: #161616;
+          color: white;
+          outline: none;
+        "
+      />
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Senha"
+        style="
+          width: 100%;
+          padding: 16px;
+          margin-bottom: 20px;
+          border-radius: 16px;
+          border: 1px solid rgba(255,0,140,0.2);
+          background: #161616;
+          color: white;
+          outline: none;
+        "
+      />
+
+      <button
+        onclick="login()"
+        style="
+          width: 100%;
+          padding: 16px;
+          border: none;
+          border-radius: 16px;
+          background: #ff0077;
+          color: white;
+          font-weight: bold;
+          font-size: 16px;
+          cursor: pointer;
+          transition: 0.2s;
+        "
+      >
+        Entrar
+      </button>
+
+      <button
+        onclick="register()"
+        style="
+          width: 100%;
+          padding: 16px;
+          border: 1px solid rgba(255,0,140,0.2);
+          border-radius: 16px;
+          background: transparent;
+          color: #ff4fa8;
+          font-weight: bold;
+          font-size: 16px;
+          cursor: pointer;
+          transition: 0.2s;
+          margin-top: 12px;
+        "
+      >
+        Criar Conta
+      </button>
+
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <img
+        src="takelogo.png"
+        class="logo"
+      />
+
+      <button class="new-channel">+ Novo Canal</button>
+
+      <input
+        type="text"
+        class="search"
+        placeholder="Pesquisar canais..."
+      />
+
+      <div class="channel">🎮 Projeto Principal</div>
+      <div class="channel">🤖 IA do Game</div>
+      <div class="channel">🛠 Correções</div>
+      <div class="channel">📦 Commits GitHub</div>
+
+      <div class="profile">
+        <div class="avatar">J</div>
+
+        <div>
+          <strong>João</strong>
+          <p style="color: #4cff85; font-size: 13px;">
+            Online
+          </p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <header class="header">
+        <div>
+          <h1># projeto-principal</h1>
+          <p style="color: gray; margin-top: 5px;">
+            Área para conversar e registrar alterações.
+          </p>
+        </div>
+
+        <div class="header-buttons">
+          <button>🔔 Notificações</button>
+          <button>🐙 GitHub</button>
+          <button>👥 Chamada</button>
+        </div>
+      </header>
+
+      <!-- CHAT -->
+      <section class="chat" id="chat">
+
+        <div class="message">
+          <div class="message-top">
+            <div class="message-avatar">J</div>
+
+            <div>
+              <strong>João</strong>
+              <span class="tag">Commit</span>
+              <div class="time">10:32</div>
+            </div>
+          </div>
+
+          <p>
+            Adicionei o sistema de login e corrigi o bug do menu.
+          </p>
+        </div>
+
+        <div class="message">
+          <div class="message-top">
+            <div class="message-avatar">L</div>
+
+            <div>
+              <strong>Lucy</strong>
+              <span class="tag">Mensagem</span>
+              <div class="time">11:10</div>
+            </div>
+          </div>
+
+          <p>
+            Vou atualizar a HUD do jogo hoje à noite.
+          </p>
+        </div>
+
+      </section>
+
+      <!-- INPUT -->
+      <footer class="input-area">
+        <input
+          type="text"
+          id="messageInput"
+          placeholder="Escreva uma mensagem ou atualização..."
+        />
+
+        <button class="send" onclick="sendMessage()">
+          Enviar
+        </button>
+      </footer>
+
+    </main>
+  </div>
+
+  <script>
+    function register() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if(username.trim() === '' || password.trim() === '') {
+        alert('Preencha usuário e senha!');
+        return;
+      }
+
+      const loginUsers = JSON.parse(localStorage.getItem('takeoverUsers')) || [];
+
+      const validUser = loginUsers.find(
+        user => user.username === username && user.password === password
+      );
+
+      if(!validUser) {
+        alert('Usuário ou senha incorretos!');
+        return;
+      }
+
+      const registeredUsers = JSON.parse(localStorage.getItem('takeoverUsers')) || [];
+
+      const exists = registeredUsers.find(user => user.username === username);
+
+      if(exists) {
+        alert('Esse usuário já existe!');
+        return;
+      }
+
+      registeredUsers.push({ username, password });
+      localStorage.setItem('takeoverUsers', JSON.stringify(registeredUsers));
+
+      alert('Conta criada com sucesso!');
+    }
+
+    function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if(username.trim() === '' || password.trim() === '') {
+        alert('Preencha usuário e senha!');
+        return;
+      }
+
+      localStorage.setItem('takeoverUser', username);
+
+      document.getElementById('loginScreen').style.display = 'none';
+
+      document.querySelector('.profile strong').innerText = username;
+
+      addSystemMessage(`${username} entrou no TAKEOVER.`);
+    }
+
+    window.onload = () => {
+      const savedUser = localStorage.getItem('takeoverUser');
+
+      if(savedUser) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.querySelector('.profile strong').innerText = savedUser;
+      }
+    }
+
+    function addSystemMessage(text) {
+      const chat = document.getElementById('chat');
+
+      const message = document.createElement('div');
+      message.classList.add('message');
+
+      message.innerHTML = `
+        <div class="message-top">
+          <div class="message-avatar">⚡</div>
+
+          <div>
+            <strong>TAKEOVER BOT</strong>
+            <span class="tag">Sistema</span>
+            <div class="time">Agora</div>
+          </div>
+        </div>
+
+        <p>${text}</p>
+      `;
+
+      chat.appendChild(message);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('messageInput');
+      const chat = document.getElementById('chat');
+
+      if (input.value.trim() === '') return;
+
+      const message = document.createElement('div');
+      message.classList.add('message');
+
+      const time = new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      message.innerHTML = `
+        <div class="message-top">
+          <div class="message-avatar">V</div>
+
+          <div>
+            <strong>Você</strong>
+            <span class="tag">Mensagem</span>
+            <div class="time">${time}</div>
+          </div>
+        </div>
+
+        <p>${input.value}</p>
+      `;
+
+      const username = localStorage.getItem('takeoverUser') || 'Usuário';
+
+      sendRealtimeMessage(input.value, username);
+
+      input.value = '';
+    }
+
+    document
+      .getElementById('messageInput')
+      .addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+          sendMessage();
+        }
+      });
+  </script>
+
+  <!-- ========================================= -->
+  <!-- BACKEND NODE.JS + SOCKET.IO (SERVER.JS) -->
+  <!-- ========================================= -->
+
+  <!--
+
+  CRIE UM ARQUIVO CHAMADO:
+  server.js
+
+  COLE ISSO:
+
+  const express = require('express');
+  const http = require('http');
+  const { Server } = require('socket.io');
+
+  const app = express();
+  const server = http.createServer(app);
+
+  const io = new Server(server);
+
+  app.use(express.static(__dirname));
+
+  io.on('connection', (socket) => {
+    console.log('Usuário conectado');
+
+    socket.on('chat message', (msg) => {
+      io.emit('chat message', msg);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Usuário desconectado');
+    });
+  });
+
+  server.listen(3000, () => {
+    console.log('TAKEOVER rodando em http://localhost:3000');
+  });
+
+  =========================================
+
+  ABRA O TERMINAL NA PASTA DO PROJETO:
+
+  npm init -y
+  npm install express socket.io
+
+  DEPOIS:
+
+  node server.js
+
+  =========================================
+
+  -->
+
+  <!-- SOCKET.IO -->
+  <!-- ONLINE MULTIPLAYER -->
+  <!--
+
+  =========================================
+  PASSO 1 - CRIAR server.js
+  =========================================
+
+  const express = require('express');
+  const http = require('http');
+  const { Server } = require('socket.io');
+
+  const app = express();
+  const server = http.createServer(app);
+
+  const io = new Server(server);
+
+  app.use(express.static(__dirname));
+
+  let onlineUsers = [];
+
+  io.on('connection', (socket) => {
+    console.log('Usuário conectado');
+
+    socket.on('join', (username) => {
+      onlineUsers.push(username);
+
+      io.emit('system message', `${username} entrou no TAKEOVER.`);
+      io.emit('online users', onlineUsers);
+    });
+
+    socket.on('system message', (text) => {
+      addSystemMessage(text);
+    });
+
+    socket.on('online users', (users) => {
+      console.log('Usuários online:', users);
+    });
+
+    socket.on('chat message', (data) => {
+      io.emit('chat message', data);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Usuário desconectado');
+    });
+  });
+
+  server.listen(3000, () => {
+    console.log('Servidor online em http://localhost:3000');
+  });
+
+  =========================================
+  PASSO 2 - INSTALAR
+  =========================================
+
+  npm init -y
+  npm install express socket.io
+
+  =========================================
+  PASSO 3 - RODAR
+  =========================================
+
+  node server.js
+
+  =========================================
+
+  -->
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+  <script>
+    const socket = io();
+
+    const currentUser = localStorage.getItem('takeoverUser');
+
+    if(currentUser) {
+      socket.emit('join', currentUser);
+    }
+
+    function sendRealtimeMessage(text, username) {
+      socket.emit('chat message', {
+        text,
+        username
+      });
+    }
+
+    socket.on('chat message', (data) => {
+      const chat = document.getElementById('chat');
+
+      const message = document.createElement('div');
+      message.classList.add('message');
+
+      const time = new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      message.innerHTML = `
+        <div class="message-top">
+          <div class="message-avatar">
+            ${data.username[0].toUpperCase()}
+          </div>
+
+          <div>
+            <strong>${data.username}</strong>
+            <span class="tag">Online</span>
+            <div class="time">${time}</div>
+          </div>
+        </div>
+
+        <p>${data.text}</p>
+      `;
+
+      chat.appendChild(message);
+      chat.scrollTop = chat.scrollHeight;
+    });
+  </script>
+</body>
+</html>
